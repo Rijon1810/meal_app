@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/models/meal.dart';
 import 'package:meal_app/screens/categories_screen.dart';
 import 'package:meal_app/screens/favorites_screen.dart';
 import 'package:meal_app/widgets/main_drawer.dart';
 
 class TasbsScreen extends StatefulWidget {
+  final List<Meal> favoriteMeals;
+  TasbsScreen(this.favoriteMeals);
   @override
   _TasbsScreenState createState() => _TasbsScreenState();
 }
 
 class _TasbsScreenState extends State<TasbsScreen> {
-  final List<Map<String, Object>> _pages = [
-    {'page': CategoriesScreen(), 'title': 'Categories'},
-    {'page': FavoritesScreen(), 'title': 'Your Favorite'},
-  ];
-
+  List<Map<String, Object>> _pages = [];
   int _selectedPageIndex = 0;
+  @override
+  void initState() {
+    _pages = [
+      {
+        'page': CategoriesScreen(),
+        'title': 'Categories',
+      },
+      {
+        'page': FavoritesScreen(widget.favoriteMeals),
+        'title': 'Your Favorite',
+      },
+    ];
+
+    super.initState();
+  }
 
   void _selectPage(int index) {
     setState(() {
@@ -29,7 +43,7 @@ class _TasbsScreenState extends State<TasbsScreen> {
         title: Text(_pages[_selectedPageIndex]['title'].toString()),
       ),
       drawer: MainDrawer(),
-      body: _selectedPageIndex == 0 ? CategoriesScreen() : FavoritesScreen(),
+      body: _selectedPageIndex == 0 ? CategoriesScreen() : FavoritesScreen(widget.favoriteMeals),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
         backgroundColor: Theme.of(context).primaryColor,
